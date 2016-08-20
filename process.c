@@ -170,7 +170,7 @@ void mergePdf(char* input_dir, char* output_file) {
   }
 
   while ((dp=readdir(dir)) != NULL) {
-    if (!strcmp(dp->d_name, ".") || !strcmp(dp->d_name, "..")) {
+    if (!strcmp(dp->d_name, ".") || !strcmp(dp->d_name, "..") || !strncmp(dp->d_name, ".", 1)) {
         continue;
     }
     sprintf(temp, " %s/%s", input_dir, dp->d_name);
