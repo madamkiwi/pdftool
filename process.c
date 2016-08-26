@@ -150,7 +150,7 @@ int initDB() {
 
 void splitPdf(int start_page, int end_page, char* input_file, char* output_file) {
   char* cmd = (char*)malloc(BUFSIZE);
-  sprintf(cmd, "gs -dBATCH -sOutputFile=%s -dFirstPage=%d -dLastPage=%d -sDEVICE=pdfwrite %s",
+  sprintf(cmd, "gs -dNOPAUSE -dBATCH -sOutputFile=%s -dFirstPage=%d -dLastPage=%d -sDEVICE=pdfwrite %s",
           output_file, start_page, end_page, input_file);
   system(cmd);
   free(cmd);
@@ -170,7 +170,7 @@ void mergePdf(char* input_dir, char* output_file) {
   }
 
   while ((dp=readdir(dir)) != NULL) {
-    if (!strcmp(dp->d_name, ".") || !strcmp(dp->d_name, "..") || !strncmp(dp->d_name, ".", 1)) {
+    if (!strncmp(dp->d_name, ".", 1)) {
         continue;
     }
     sprintf(temp, " %s/%s", input_dir, dp->d_name);
@@ -178,6 +178,7 @@ void mergePdf(char* input_dir, char* output_file) {
   }
   sprintf(cmd, "gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -dPDFSETTINGS=/prepress -sOutputFile=%s %s",
 	output_file, input_file);
+
   system(cmd);
   free(cmd);
   free(temp);
