@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <dirent.h>
 
-#define BUFSIZE 256
+#define BUFSIZE 512
 #define DBSIZE 256
 #define CONFIG_FILE "config"
 #define UNKNOWN_FILE "unknown.pdf"
@@ -174,11 +174,14 @@ void mergePdf(char* input_dir, char* output_file) {
         continue;
     }
     sprintf(temp, " %s/%s", input_dir, dp->d_name);
+    if ((sizeof(input_file) + sizeof(temp)) > (BUFSIZE-1)) {
+	    printf("size too big %lu > %d\n", sizeof(input_file) + sizeof(temp), BUFSIZE);
+	    return;
+    }
     strcat(input_file, temp);
   }
   sprintf(cmd, "gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -dPDFSETTINGS=/prepress -sOutputFile=%s %s",
 	output_file, input_file);
-
   system(cmd);
   free(cmd);
   free(temp);
